@@ -11,7 +11,7 @@
 #include "EBO.h"
 
 #define WINDOW_WIDTH  800
-#define WINDOW_HEIGHT 600
+#define WINDOW_HEIGHT 800
 #define WINDOW_TITLE "RIZZ ENGINE TEST"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -27,6 +27,24 @@ void processInput(GLFWwindow* window)
 		glfwSetWindowShouldClose(window, true);
 }
 
+//Vertices Coordinates
+GLfloat vertices[] =
+{ //            COORDNATES                         /       COLORS         //
+	-0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f,//Lower Left corner
+	 0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f, //Lower Rigth corner
+	 0.0f    ,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // 1.0f, 0.3f, 0.32f, //Upper corner
+	-0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, // 0.9f, 0.45f, 0.17f, //Inner Left
+	 0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, // 0.9f, 0.45f, 0.17f, //Inner Rigth
+	 0.0f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f, //Inner down
+};
+
+// Indices for vertices order
+GLuint indices[] =
+{
+	0, 3, 5,
+	3, 2, 4,
+	5, 4, 1
+};
 
 int main() {
 
@@ -39,25 +57,7 @@ int main() {
 	//Tell GLFW that we are using CORE profile
 	//so that means we only have the modern
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-
-	//Vertices Coordinates
-	GLfloat vertices[] =
-	{
-		-0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, //Lower Left corner
-		 0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, //Lower Rigth corner
-		 0.0f    ,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f, //Upper corner
-		-0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, //Lower Left corner
-		 0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, //Lower Rigth corner
-		 0.0f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, //Upper corner
-	};
-
-	GLuint indices[] =
-	{
-		0, 3, 5,
-		3, 2, 4,
-		5, 4, 1
-	};
+	//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 
 	//CREATION OF THE WINDOW WITH THE GLOBAL PARAMETERS
 	//WE HAVE SET FOR WIDTH & HEIGHT AND THE TITLE 
@@ -80,6 +80,8 @@ int main() {
 		return -1;
 	}
 
+	// Load GLAD so it configures OpenGL
+	gladLoadGL();
 	// Specify the viewport of OpenGL in the window
 	// from x = 0, y = 0, to x = WINDW_WIDTH, y = WINDOW_HEIGHT
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -147,7 +149,7 @@ int main() {
 		// Bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
 
 		/*glDrawArrays(GL_TRIANGLES, 0, 3);*/    //This is a for vertex shaders code
 
