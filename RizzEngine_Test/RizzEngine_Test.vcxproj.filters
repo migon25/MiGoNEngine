@@ -16,6 +16,9 @@
     <Filter Include="Archivos de origen\Shaders">
       <UniqueIdentifier>{20288a90-95cd-418b-b427-237083b0403e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Archivos de origen\Textures">
+      <UniqueIdentifier>{6edb8481-93ec-4f8a-b6d3-48586ee3d5ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -61,5 +64,10 @@
     <ClInclude Include="VAO.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="pop_cat.png">
+      <Filter>Archivos de origen\Textures</Filter>
+    </Image>
   </ItemGroup>
 </Project>
