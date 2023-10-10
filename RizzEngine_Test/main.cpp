@@ -30,21 +30,18 @@ void processInput(GLFWwindow* window)
 
 //Vertices Coordinates
 GLfloat vertices[] =
-{ //            COORDNATES                         /       COLORS         //
-	-0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  0.0f, 1.0f, 0.0f ,//Lower Left corner
-	 0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  1.0f, 0.0f, 0.0f , //Lower Rigth corner
-	 0.0f    ,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f,  0.0f, 0.0f, 1.0f, //Upper corner
-	-0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f,  0.0f, 0.5f, 0.5f, //Inner Left
-	 0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f,  0.5f, 0.0f, 0.5f, //Inner Rigth
-	 0.0f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  0.5f, 0.5f, 0.0f , //Inner down
+{ //      COORDNATES       /        COLORS        //
+	-0.5f, -0.5f, 0.0f,         0.0f, 1.0f, 0.0f, //Lower Left corner
+	 0.5f, -0.5f, 0.0f,         1.0f, 0.0f, 0.0f, //Lower Rigth corner
+	 0.5f,  0.5f, 0.0f,         0.0f, 0.0f, 1.0f, //Upper corner
+	-0.5f,  0.5f, 0.0f,         0.0f, 0.5f, 0.5f, //Inner Left
 };
 
 // Indices for vertices order
 GLuint indices[] =
 {
-	0, 3, 5,
-	3, 2, 4,
-	5, 4, 1
+	0, 1, 2,
+	2, 3, 0
 };
 
 int main() {
@@ -110,6 +107,7 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	// Create uniform ID and get the uniform value from the vertex shader file
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
 
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
@@ -137,7 +135,7 @@ int main() {
 		// Bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
-		glDrawElements(GL_TRIANGLES, 9, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 		/*glDrawArrays(GL_TRIANGLES, 0, 3);*/    //This is a for vertex shaders code
 
