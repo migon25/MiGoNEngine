@@ -72,7 +72,6 @@ int main() {
 
 	//Introduce the window into current context
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//Error check for GLAD initialization
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
