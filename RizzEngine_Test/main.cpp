@@ -110,6 +110,8 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);    //Specify color of bg
