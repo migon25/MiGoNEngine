@@ -4,6 +4,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <stb/stb_image.h>
 
 #include "shaderClass.h"
 #include "VAO.h"
@@ -101,9 +102,9 @@ int main() {
 	// Generate Element Buffer Objects and links it to indices
 	EBO EBO1(indices, sizeof(indices));
 
-	// Links VBO to VAO
-	VAO1.linkVBO(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.linkVBO(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	// Links VBO attributes such as coordinates and colors to VAO
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	// Unbind ALL to prevent accidentaly modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
@@ -122,12 +123,15 @@ int main() {
 		processInput(window); //process if the user has pressed ESCAPE button
 
 		//RENDERING------------------------------------------------------------//
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);    //Specify color of bg
+		glClearColor(0.07f, 0.13f, 0.17f, 1.0f);    //Specify color of bg
 		glClear(GL_COLOR_BUFFER_BIT);            //Clean back buffer & assign new
 		                                         //color to it
 
 		// Tell OpenGL which Shader program we want to use
 		shaderProgram.Activate();
+
+		// Asignes a value to uniform, Must be done after shader program is active
+		glUniform1f(uniID, 0.5f);
 		// Bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
