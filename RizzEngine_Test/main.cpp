@@ -11,7 +11,7 @@
 #include "EBO.h"
 
 #define WINDOW_WIDTH  800
-#define WINDOW_HEIGHT 800
+#define WINDOW_HEIGHT 600
 #define WINDOW_TITLE "RIZZ ENGINE TEST"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
@@ -30,12 +30,12 @@ void processInput(GLFWwindow* window)
 //Vertices Coordinates
 GLfloat vertices[] =
 { //            COORDNATES                         /       COLORS         //
-	-0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f,//Lower Left corner
-	 0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f, //Lower Rigth corner
-	 0.0f    ,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f, // 1.0f, 0.3f, 0.32f, //Upper corner
-	-0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, // 0.9f, 0.45f, 0.17f, //Inner Left
-	 0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f, // 0.9f, 0.45f, 0.17f, //Inner Rigth
-	 0.0f    , -0.5f * float(sqrt(3)) / 3    , 0.0f, // 0.8f, 0.3f, 0.2f, //Inner down
+	-0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  0.0f, 0.7f , 0.3f ,//Lower Left corner
+	 0.5f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  0.8f, 0.3f , 0.2f , //Lower Rigth corner
+	 0.0f    ,  0.5f * float(sqrt(3)) * 2 / 3, 0.0f,  1.0f, 0.3f , 0.32f, //Upper corner
+	-0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f,  0.9f, 0.45f, 0.17f, //Inner Left
+	 0.5f / 2,  0.5f * float(sqrt(3)) / 6    , 0.0f,  0.9f, 0.45f, 0.17f, //Inner Rigth
+	 0.0f    , -0.5f * float(sqrt(3)) / 3    , 0.0f,  0.8f, 0.3f , 0.2f , //Inner down
 };
 
 // Indices for vertices order
@@ -72,6 +72,7 @@ int main() {
 
 	//Introduce the window into current context
 	glfwMakeContextCurrent(window);
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	//Error check for GLAD initialization
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -102,32 +103,14 @@ int main() {
 	EBO EBO1(indices, sizeof(indices));
 
 	// Links VBO to VAO
-	VAO1.linkVBO(VBO1, 0);
+	VAO1.linkVBO(VBO1, 0, 3, GL_FLOAT,6*sizeof(float), (void*)0);
+	VAO1.linkVBO(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
 	// Unbind ALL to prevent accidentaly modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
-
-	// ---------------------------VERTEX SHADERS CODE---------------------------//
-	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
-
-	////Vertices of our triangle
-	//float vertices[9] = {
-	//	-0.5f, -0.5f, 0.0f,
-	//	 0.5f, -0.5f, 0.0f,
-	//	 0.0f,  0.5f, 0.0f
-	//};
-
-	////creating/assigning a buffer
-	//unsigned int VertexBufferObject;
-	//glGenBuffers(1, &VertexBufferObject);
-	//glBindBuffer(GL_ARRAY_BUFFER, VertexBufferObject);
-	//glBufferData(GL_ARRAY_BUFFER, 9*sizeof(float), vertices, GL_STATIC_DRAW);
-
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	// -----------------------VERTEX SHADERS CODE END---------------------------//
 
 	glClearColor(0.2f, 0.3f, 0.3f, 1.0f);    //Specify color of bg
 	glClear(GL_COLOR_BUFFER_BIT);            //Clean back buffer & assign new
