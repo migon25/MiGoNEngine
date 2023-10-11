@@ -9,6 +9,7 @@
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
 
+#include "Texture.h"
 #include "shaderClass.h"
 #include "VAO.h"
 #include "VBO.h"
@@ -23,7 +24,7 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 	glViewport(0, 0, width, height);
 }
 
-/*The function returns whether this key is currently being pressed. We’re
+/*The function returns whether this key is currently being pressed. Weâ€™re
 creating a processInput function to keep all input code organized*/
 void processInput(GLFWwindow* window)
 {
@@ -44,7 +45,6 @@ GLfloat vertices[] =
 // Indices for vertices order
 GLuint indices[] =
 {
-	0, 1, 2,
 	0, 2, 3,
 	0, 1, 4,
 	1, 2, 4,
@@ -108,14 +108,20 @@ int main() {
 	EBO EBO1(indices, sizeof(indices));
 
 	// Links VBO attributes such as coordinates and colors to VAO
-	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 6 * sizeof(float), (void*)0);
-	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 6 * sizeof(float), (void*)(3*sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 0, 3, GL_FLOAT, 8 * sizeof(float), (void*)0);
+	VAO1.LinkAttrib(VBO1, 1, 3, GL_FLOAT, 8 * sizeof(float), (void*)(3*sizeof(float)));
+	VAO1.LinkAttrib(VBO1, 2, 2, GL_FLOAT, 8 * sizeof(float), (void*)(6 * sizeof(float)));
 	// Unbind ALL to prevent accidentaly modifying them
 	VAO1.Unbind();
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	// Create uniform ID and get the uniform value from the vertex shader file
 	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+	// Create texture
+	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	popcat.textUnit(shaderProgram, "tex0", 0);
 
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
 
@@ -165,6 +171,10 @@ int main() {
 
 		// Asignes a value to uniform, Must be done after shader program is active
 		glUniform1f(uniID, 0.5f);
+
+		// Bind the texture so it appears in the render
+		popcat.Bind();
+
 		// Bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
@@ -185,6 +195,7 @@ int main() {
 	VAO1.Delete();
 	VBO1.Delete();
 	EBO1.Delete();
+	popcat.Delete();
 	shaderProgram.Delete();
 
 	//Delete window before exiting the program
