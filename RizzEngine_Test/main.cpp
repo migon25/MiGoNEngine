@@ -34,7 +34,6 @@ void framebuffer_size_callback(GLFWwindow* window, int width, int height)
 creating a processInput function to keep all input code organized*/
 void processInput(GLFWwindow* window)
 {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 }
 
@@ -132,6 +131,7 @@ int main() {
 	ImGui_ImplOpenGL3_Init("#version 330");
 
 	// Variables to be changed in the ImGUI window
+	bool closeWindow = false;
 	bool drawPyramid = true;
 	float scale = 1.0f;
 	GLuint scaleID = glGetUniformLocation(shaderProgram.ID, "scale");
@@ -154,7 +154,10 @@ int main() {
 	//ESCAPE button is pressed by the user
 	while (!glfwWindowShouldClose(window))
 	{
-		processInput(window); //process if the user has pressed ESCAPE button
+		if (closeWindow == true || (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS))
+		{
+			processInput(window); //process if the user has pressed ESCAPE button
+		}
 
 		//RENDERING------------------------------------------------------------//
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);    //Specify color of bg
@@ -165,7 +168,6 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-
 		// Tell OpenGL which Shader program we want to use
 		shaderProgram.Activate();
 
@@ -173,7 +175,10 @@ int main() {
 		glUniform1f(scaleID, scale);
 		glUniform4f(colorID, color[0], color[1], color[2], color[3]);
 
-		camera.Imputs(window);
+		if (!io.WantCaptureMouse)
+		{
+			camera.Imputs(window);
+		}
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
 		// Bind the texture so it appears in the render
@@ -189,6 +194,8 @@ int main() {
 
 		// ImGUI window creation
 		ImGui::Begin("ImGUI Window Test");
+		// Checkbox that appears in the window
+		ImGui::Checkbox("CLOSE PROGRAM", &closeWindow);
 		// Text that appears in the window
 		ImGui::Text("SIMPLE TEXT");
 		// Checkbox that appears in the window
