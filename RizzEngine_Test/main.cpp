@@ -5,6 +5,10 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include"imgui.h"
+#include"imgui_impl_glfw.h"
+#include"imgui_impl_opengl3.h"
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stb/stb_image.h>
@@ -119,8 +123,22 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	// Create uniform ID and get the uniform value from the vertex shader file
-	GLuint uniID = glGetUniformLocation(shaderProgram.ID, "scale");
+	// Initialize ImGUI
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO(); (void)io;
+	ImGui::StyleColorsDark();
+	ImGui_ImplGlfw_InitForOpenGL(window, true);
+	ImGui_ImplOpenGL3_Init("#version 330");
+
+	// Variables to be changed in the ImGUI window
+	bool drawPyramid = true;
+	float scale = 1.0f;
+	GLuint scaleID = glGetUniformLocation(shaderProgram.ID, "scale");
+
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	GLuint colorID = glGetUniformLocation(shaderProgram.ID, "ImGuiColor");
+
 
 	// Create texture
 	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
@@ -142,14 +160,19 @@ int main() {
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f);    //Specify color of bg
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 
+		// Tell OpenGL a new frame is about to begin
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 
 
 		// Tell OpenGL which Shader program we want to use
 		shaderProgram.Activate();
 
+		// Assigns a value to the uniform;
+		glUniform1f(scaleID, scale);
+		glUniform4f(colorID, color[0], color[1], color[2], color[3]);
 
-		// Asignes a value to uniform, Must be done after shader program is active
-		glUniform1f(uniID, 0.5f);
 		camera.Imputs(window);
 		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
 
@@ -159,8 +182,27 @@ int main() {
 		// Bind the VAO so OpenGL knows how to use it
 		VAO1.Bind();
 		// Draw the triangle using the GL_TRIANGLES primitive
+		if (drawPyramid)
+		{
 			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
+		}
 
+		// ImGUI window creation
+		ImGui::Begin("ImGUI Window Test");
+		// Text that appears in the window
+		ImGui::Text("SIMPLE TEXT");
+		// Checkbox that appears in the window
+		ImGui::Checkbox("Draw Pyramid", &drawPyramid);
+		// Slider that appears in the window
+		ImGui::SliderFloat("scale", &scale, 0.5f, 2.0f);
+		// Fancy color editor that appears in the window
+		ImGui::ColorEdit4("Color", color);
+		// Ends the window
+		ImGui::End();
+
+		// Renders the ImGUI elements
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
 		//RENDERING END ------------------------------------------------------//
 
@@ -170,6 +212,11 @@ int main() {
 	};
 
 	//------------------------ END OF THE PROGRAM B4 EXITING ---------------//
+
+	// Deletes all ImGUI instances
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+	ImGui::DestroyContext();
 
 	//Deleting Vertex Shaders
 	VAO1.Delete();

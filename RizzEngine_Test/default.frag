@@ -10,7 +10,10 @@ in vec2 texCoord;
 // Gets the Texture Unit from the main function
 uniform sampler2D tex0;
 
+//imgui window color test
+uniform vec4 ImGuiColor;
+
 void main()
 {
-    FragColor = texture(tex0, texCoord)*vec4(color,1.0);
+    FragColor = texture(tex0, texCoord)*vec4(ImGuiColor);
 }
