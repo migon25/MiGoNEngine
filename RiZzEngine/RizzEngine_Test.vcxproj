@@ -24,6 +24,7 @@
     <ProjectGuid>{e6ea5e1f-99cf-465d-8e2d-67db93ea7fc2}</ProjectGuid>
     <RootNamespace>RizzEngineTest</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>RizzEngine</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

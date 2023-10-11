@@ -22,7 +22,7 @@
 
 #define WINDOW_WIDTH  800
 #define WINDOW_HEIGHT 800
-#define WINDOW_TITLE "RIZZ ENGINE TEST"
+#define WINDOW_TITLE "RIZZ ENGINE"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height)
