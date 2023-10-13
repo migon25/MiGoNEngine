@@ -16,7 +16,10 @@ uniform vec4 ImGuiColor;
 //Texture resize
 uniform float TexSize;
 
+//Light color from light shader
+uniform vec4 lightColor;
+
 void main()
 {
-    FragColor = texture(tex0, texCoord * TexSize) * vec4(ImGuiColor);
+    FragColor = texture(tex0, texCoord * TexSize) * vec4(ImGuiColor+lightColor);
 }

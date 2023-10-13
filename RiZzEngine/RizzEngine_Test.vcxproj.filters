@@ -83,6 +83,12 @@
     <None Include="default.frag">
       <Filter>Archivos de origen\Shaders</Filter>
     </None>
+    <None Include="light.frag">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
+    <None Include="light.vert">
+      <Filter>Archivos de origen\Shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">

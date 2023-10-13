@@ -150,9 +150,45 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+
+	//--------------------------Lighting code-----------------------//
+	Shader lightShader("light.vert", "light.frag");
+	VAO VAOLight;
+	VAOLight.Bind();
+
+	VBO VBOLight(lightVertices, sizeof(lightVertices));
+	EBO EBOLight(lightIndices, sizeof(lightIndices));
+
+	VAOLight.LinkAttrib(VBOLight, 0, 3, GL_FLOAT, 3 * sizeof(float), (void*)0);
+
+	VAOLight.Unbind();
+	VBOLight.Unbind();
+	EBOLight.Unbind();
+
+	// Light color
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+
+	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
+	glm::mat4 lightModel = glm::mat4(1.0f);
+	lightModel = glm::translate(lightModel, lightPos);
+
+	glm::vec3 pyramidPos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 pyramidModel = glm::mat4(1.0f);
+	pyramidModel = glm::translate(pyramidModel, pyramidPos);
+
+	lightShader.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(lightShader.ID, "model"), 1, GL_FALSE, glm::value_ptr(lightModel));
+	glUniform4f(glGetUniformLocation(lightShader.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+	shaderProgram.Activate();
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(pyramidModel));
+	glUniform4f(glGetUniformLocation(shaderProgram.ID, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+
+	//--------------------------Lighting code-----------------------//
+
 	// Create texture
 	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popcat.textUnit(shaderProgram, "tex0", 0);
+
 
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
 
@@ -179,6 +215,9 @@ int main() {
 	float TexSize = 1.0f;
 	GLuint TexSizeID = glGetUniformLocation(shaderProgram.ID, "TexSize");
 
+	float lightColorGui = 1.0f;
+	GLuint lightColorGuiID = glGetUniformLocation(lightShader.ID, "lightColor");
+
 	//-------------------------IMGUI--------------------------------//
 
 	glEnable(GL_DEPTH_TEST);
@@ -203,21 +242,21 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		// Tell OpenGL which Shader program we want to use
-		shaderProgram.Activate();
-
-		// Assigns a value to the uniform;
-		glUniform1f(scaleID, scale);
-		glUniform4f(colorID, color[0], color[1], color[2], color[3]);
-		glUniform1f(TexSizeID, TexSize);
-
 		if (!io.WantCaptureMouse)
 		{
 			camera.Imputs(window);
 		}
 		camera.updateMatrix(45.0f, 0.1f, 100.0f);
 
+		// Tell OpenGL which Shader program we want to use
+		shaderProgram.Activate();
+		glUniform3f(glGetUniformLocation(shaderProgram.ID, "camPos"), camera.Position.x, camera.Position.y, camera.Position.z);
 		camera.Matrix(shaderProgram, "camMatrix");
+
+		// Assigns a value to the uniform #NOTE: always after the shader is activated
+		glUniform1f(scaleID, scale);
+		glUniform4f(colorID, color[0], color[1], color[2], color[3]);
+		glUniform1f(TexSizeID, TexSize);
 
 		// Bind the texture so it appears in the render
 		popcat.Bind();
@@ -229,6 +268,11 @@ int main() {
 		{
 			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 		}
+
+		lightShader.Activate();
+		camera.Matrix(lightShader, "camMatrix");
+		VAOLight.Bind();
+		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
 
 		// ImGUI window creation
 		ImGui::Begin("ImGUI Window Test");
@@ -242,6 +286,7 @@ int main() {
 		ImGui::SliderFloat("scale", &scale, 0.5f, 2.0f);
 		// Slider for Texture Size
 		ImGui::SliderFloat("Texture Scale", &TexSize, 0.5f, 100.0f);
+		ImGui::SliderFloat("Light Color", &lightColorGui, 0.5f, 100.0f);
 		// Fancy color editor that appears in the window
 		ImGui::ColorEdit4("Color", color);
 		// Ends the window
@@ -271,6 +316,7 @@ int main() {
 	EBO1.Delete();
 	popcat.Delete();
 	shaderProgram.Delete();
+	lightShader.Delete();
 
 	//Delete window before exiting the program
 	glfwDestroyWindow(window);
