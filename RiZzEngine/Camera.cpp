@@ -1,21 +1,26 @@
 #include "Camera.h"
 
-Camera::Camera(int width, int height, glm::vec3 position, glm::vec3 orientation)
+Camera::Camera(int width, int height, glm::vec3 position)
 {
 	Camera::width = width;
 	Camera::height = height;
 	Position = position;
-	Orientation = orientation;
 }
 
-void Camera::Matrix(float FOVdeg, float nearPlane, float farPlane, Shader& shader, const char* uniform)
+void Camera::updateMatrix(float FOVdeg, float nearPlane, float farPlane)
 {
 	glm::mat4 view = glm::mat4(1.0f);
 	glm::mat4 proj = glm::mat4(1.0f);
 
 	view = glm::lookAt(Position, Position + Orientation, Up);
-	proj = glm::perspective(glm::radians(FOVdeg), (float)(800 / 800), nearPlane, farPlane);
-	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(proj*view));
+	proj = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
+
+	cameraMatrix = proj * view;
+}
+
+void Camera::Matrix(Shader& shader, const char* uniform)
+{
+	glUniformMatrix4fv(glGetUniformLocation(shader.ID, uniform), 1, GL_FALSE, glm::value_ptr(cameraMatrix));
 }
 
 void Camera::Imputs(GLFWwindow* window)
@@ -51,9 +56,10 @@ void Camera::Imputs(GLFWwindow* window)
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = 0.03f;
+		speed = 0.02f;
 	}
 
+	// Handles mouse inputs
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
 		// Hides mouse cursor
@@ -81,7 +87,7 @@ void Camera::Imputs(GLFWwindow* window)
 		glm::vec3 newOrientation = glm::rotate(Orientation, glm::radians(-rotX), glm::normalize(glm::cross(Orientation, Up)));
 
 		// Decides whether or not the next vertical Orientation is legal or not
-		if (abs(glm::angle(newOrientation, Up) - glm::radians(0.0f)) <= glm::radians(360.0f))
+		if (abs(glm::angle(newOrientation, Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
 		{
 			Orientation = newOrientation;
 		}

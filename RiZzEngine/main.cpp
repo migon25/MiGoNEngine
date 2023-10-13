@@ -41,10 +41,10 @@ void processInput(GLFWwindow* window)
 GLfloat vertices[] =
 { //      COORDNATES       /        COLORS        /    TEXTURE COORD
 	-0.5f,  0.0f,  0.5f,         0.0f, 1.0f, 0.0f,	  0.0f, 0.0f,      //Lower Left corner
-	-0.5f,  0.0f, -0.5f,         1.0f, 0.0f, 0.0f,    5.0f, 0.0f,      //Lower Rigth corner
+	-0.5f,  0.0f, -0.5f,         1.0f, 0.0f, 0.0f,    1.0f, 0.0f,      //Lower Rigth corner
 	 0.5f,  0.0f, -0.5f,         0.0f, 0.0f, 1.0f,    0.0f, 0.0f,      //Upper corner
-	 0.5f,  0.0f,  0.5f,         0.0f, 0.5f, 0.5f,    5.0f, 0.0f,      //Upper Left
-     0.0f,  0.8f,  0.0f,         0.0f, 0.5f, 0.5f,    2.5f, 5.0f       //Upper Left
+	 0.5f,  0.0f,  0.5f,         0.0f, 0.5f, 0.5f,    1.0f, 0.0f,      //Upper Left
+     0.0f,  0.8f,  0.0f,         0.0f, 0.5f, 0.5f,    0.5f, 1.0f       //Upper Left
 };
 
 // Indices for vertices order
@@ -56,6 +56,34 @@ GLuint indices[] =
 	1, 2, 4,
 	2, 3, 4,
 	3, 0, 4
+};
+
+GLfloat lightVertices[] =
+{ //     COORDINATES     //
+	-0.1f, -0.1f,  0.1f,
+	-0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f, -0.1f,
+	 0.1f, -0.1f,  0.1f,
+	-0.1f,  0.1f,  0.1f,
+	-0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f, -0.1f,
+	 0.1f,  0.1f,  0.1f
+};
+
+GLuint lightIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3,
+	0, 4, 7,
+	0, 7, 3,
+	3, 7, 6,
+	3, 6, 2,
+	2, 6, 5,
+	2, 5, 1,
+	1, 5, 4,
+	1, 4, 0,
+	4, 5, 6,
+	4, 6, 7
 };
 
 int main() {
@@ -122,7 +150,16 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
-	// Initialize ImGUI
+	// Create texture
+	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
+	popcat.textUnit(shaderProgram, "tex0", 0);
+
+	//------------ VERTEX SHADERS CODE FINAL------------------------//
+
+
+	//-------------------------IMGUI--------------------------------//
+
+	// Initialize ImGui
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -139,16 +176,14 @@ int main() {
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	GLuint colorID = glGetUniformLocation(shaderProgram.ID, "ImGuiColor");
 
+	float TexSize = 1.0f;
+	GLuint TexSizeID = glGetUniformLocation(shaderProgram.ID, "TexSize");
 
-	// Create texture
-	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
-	popcat.textUnit(shaderProgram, "tex0", 0);
-
-	//------------ VERTEX SHADERS CODE FINAL------------------------//
+	//-------------------------IMGUI--------------------------------//
 
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(-1.0f, -1.0f, -1.0f));
+	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.5f, 2.0f));
 	
 	//MAin while loop. Window is open until the
 	//ESCAPE button is pressed by the user
@@ -174,12 +209,15 @@ int main() {
 		// Assigns a value to the uniform;
 		glUniform1f(scaleID, scale);
 		glUniform4f(colorID, color[0], color[1], color[2], color[3]);
+		glUniform1f(TexSizeID, TexSize);
 
 		if (!io.WantCaptureMouse)
 		{
 			camera.Imputs(window);
 		}
-		camera.Matrix(45.0f, 0.1f, 100.0f, shaderProgram, "camMatrix");
+		camera.updateMatrix(45.0f, 0.1f, 100.0f);
+
+		camera.Matrix(shaderProgram, "camMatrix");
 
 		// Bind the texture so it appears in the render
 		popcat.Bind();
@@ -202,6 +240,8 @@ int main() {
 		ImGui::Checkbox("Draw Pyramid", &drawPyramid);
 		// Slider that appears in the window
 		ImGui::SliderFloat("scale", &scale, 0.5f, 2.0f);
+		// Slider for Texture Size
+		ImGui::SliderFloat("Texture Scale", &TexSize, 0.5f, 100.0f);
 		// Fancy color editor that appears in the window
 		ImGui::ColorEdit4("Color", color);
 		// Ends the window
