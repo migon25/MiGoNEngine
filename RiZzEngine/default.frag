@@ -13,7 +13,10 @@ uniform sampler2D tex0;
 //imgui window color test
 uniform vec4 ImGuiColor;
 
+//Texture resize
+uniform float TexSize;
+
 void main()
 {
-    FragColor = texture(tex0, texCoord)*vec4(ImGuiColor);
+    FragColor = texture(tex0, texCoord * TexSize) * vec4(ImGuiColor);
 }
