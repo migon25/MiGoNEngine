@@ -1,6 +1,6 @@
 #include "Texture.h"
 
-Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, GLenum pixelType)
+Texture::Texture(const char* image, GLenum texType, GLuint slot, GLenum format, GLenum pixelType)
 {
 	// Assigns the texture type
 	type = texType;
@@ -17,7 +17,8 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 	// Generates openGL texture object
 	glGenTextures(1, &ID);
 	// Assigns the texture to a texture Unit
-	glActiveTexture(slot);
+	glActiveTexture(GL_TEXTURE0 + slot);
+	unit = slot;
 	glBindTexture(texType, ID);
 
 	// Configures the type of algorithm that is used to scale image
@@ -45,13 +46,17 @@ Texture::Texture(const char* image, GLenum texType, GLenum slot, GLenum format, 
 
 void Texture::textUnit(Shader& shader, const char* uniform, GLuint unit)
 {
-	GLuint tex0Uni = glGetUniformLocation(shader.ID, uniform);
+	// Gets the location of the uniform
+	GLuint texUni = glGetUniformLocation(shader.ID, uniform);
+	// Shader needs to be activated before changing the value of a uniform
 	shader.Activate();
-	glUniform1i(tex0Uni, unit);
+	// Sets the value of the uniform
+	glUniform1i(texUni, unit);
 }
 
 void Texture::Bind()
 {
+	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, ID);
 }
 

@@ -11,7 +11,9 @@ class Texture
 public:
 	GLuint ID;
 	GLenum type;
-	Texture(const char* image, GLenum textType, GLenum slot, GLenum format, GLenum pixelType);
+	GLuint unit;
+
+	Texture(const char* image, GLenum textType, GLuint slot, GLenum format, GLenum pixelType);
 
 	// Assigns Texture unit  to a texture
 	void textUnit(Shader& shader, const char* uniform, GLuint unit);
