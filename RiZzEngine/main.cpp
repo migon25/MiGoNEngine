@@ -86,6 +86,22 @@ GLuint lightIndices[] =
 	4, 6, 7
 };
 
+// Plane Vertices coordinates
+GLfloat planeVertices[] =
+{ //     COORDINATES     /        COLORS        /    TexCoord    /       NORMALS     //
+	-1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 0.0f,		0.0f, 1.0f, 0.0f,
+	-1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		0.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f, -1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 1.0f,		0.0f, 1.0f, 0.0f,
+	 1.0f, 0.0f,  1.0f,		0.0f, 0.0f, 0.0f,		1.0f, 0.0f,		0.0f, 1.0f, 0.0f
+};
+
+// Indices for plane vertices order
+GLuint planeIndices[] =
+{
+	0, 1, 2,
+	0, 2, 3
+};
+
 int main() {
 
 	//initializing GLFW
@@ -150,8 +166,23 @@ int main() {
 	VBO1.Unbind();
 	EBO1.Unbind();
 
+	//--------------------------Plane vertex code-----------------------//
+	VAO VAOPlane;
+	VAOPlane.Bind();
 
 	//--------------------------Lighting code-----------------------//
+	VBO VBOPlane(planeVertices, sizeof(planeVertices));
+	EBO EBOPlane(planeIndices, sizeof(planeIndices));
+
+	VAOPlane.LinkAttrib(VBOPlane, 0, 3, GL_FLOAT, 11 * sizeof(float), (void*)0);
+	VAOPlane.LinkAttrib(VBOPlane, 1, 3, GL_FLOAT, 11 * sizeof(float), (void*)(3 * sizeof(float)));
+	VAOPlane.LinkAttrib(VBOPlane, 2, 2, GL_FLOAT, 11 * sizeof(float), (void*)(6 * sizeof(float)));
+	VAOPlane.LinkAttrib(VBOPlane, 3, 3, GL_FLOAT, 11 * sizeof(float), (void*)(8 * sizeof(float)));
+
+	VAOPlane.Unbind();
+	VBOPlane.Unbind();
+	EBOPlane.Unbind();
+
 	Shader lightShader("light.vert", "light.frag");
 	VAO VAOLight;
 	VAOLight.Bind();
@@ -189,8 +220,19 @@ int main() {
 	Texture popcat("pop_cat.png", GL_TEXTURE_2D, GL_TEXTURE0, GL_RGBA, GL_UNSIGNED_BYTE);
 	popcat.textUnit(shaderProgram, "tex0", 0);
 
+	//Plane ----------------------------------
+	glm::vec3 planePos = glm::vec3(0.0f, 0.0f, 0.0f);
+	glm::mat4 planeModel = glm::mat4(1.0f);
+	planeModel = glm::translate(planeModel, planePos);
+
+	glUniformMatrix4fv(glGetUniformLocation(shaderProgram.ID, "model"), 1, GL_FALSE, glm::value_ptr(planeModel));
+	glUniform3f(glGetUniformLocation(shaderProgram.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 	//------------ VERTEX SHADERS CODE FINAL------------------------//
+	Texture floorTex("planks.png", GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE);
+	floorTex.textUnit(shaderProgram, "tex0", 0);
+	Texture floorSpec("planksSpec.png", GL_TEXTURE_2D, 1, GL_RED, GL_UNSIGNED_BYTE);
+	floorSpec.textUnit(shaderProgram, "tex1", 1);
 
 
 	//-------------------------IMGUI--------------------------------//
@@ -269,7 +311,15 @@ int main() {
 			glDrawElements(GL_TRIANGLES, sizeof(indices) / sizeof(int), GL_UNSIGNED_INT, 0);
 		}
 
+		floorTex.Bind();
+		floorSpec.Bind();
+		VAOPlane.Bind();
+		glDrawElements(GL_TRIANGLES, sizeof(planeIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
+
+
+		// Tells OpenGL which Shader Program we want to use
 		lightShader.Activate();
+		// Export the camMatrix to the Vertex Shader of the light cube
 		camera.Matrix(lightShader, "camMatrix");
 		VAOLight.Bind();
 		glDrawElements(GL_TRIANGLES, sizeof(lightIndices) / sizeof(int), GL_UNSIGNED_INT, 0);
@@ -315,6 +365,14 @@ int main() {
 	VBO1.Delete();
 	EBO1.Delete();
 	popcat.Delete();
+	VAOLight.Delete();
+	VBOLight.Delete();
+	EBOLight.Delete();
+	VAOPlane.Delete();
+	VBOPlane.Delete();
+	EBOPlane.Delete();
+	floorTex.Delete();
+	floorSpec.Delete();
 	shaderProgram.Delete();
 	lightShader.Delete();
 
