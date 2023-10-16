@@ -3,33 +3,24 @@
 // Outputs colors in RGBA
 out vec4 FragColor;
 
-
+// Imports the current position from the Vertex Shader
+in vec3 crntPos;
+// Imports the normal from the Vertex Shader
+in vec3 Normal;
 // inputs the color from the vertex shader
 in vec3 color;
 // inputs the texture coordinates from the vertex shader
 in vec2 texCoord;
-// Imports the normal from the Vertex Shader
-in vec3 Normal;
-// Imports the current position from the Vertex Shader
-in vec3 crntPos;
 
 // Gets the Texture Unit from the main function
-uniform sampler2D tex0;
-uniform sampler2D tex1;
-
+uniform sampler2D diffuse0;
+uniform sampler2D specular0;
 // Gets the position of the light from the main function
 uniform vec3 lightPos;
 // Gets the color of the light from the main function
 uniform vec4 lightColor;
 // Gets the position of the camera from the main function for specular lighting
 uniform vec3 camPos;
-
-//imgui window color test
-uniform vec4 ImGuiColor;
-//Texture resize
-uniform float TexSize;
-//Light intensity
-uniform float intensity;
 
 vec4 poinLight()
 {
@@ -38,7 +29,6 @@ vec4 poinLight()
     float a = 1.0f;
     float b = 0.7f;
     float inten = 1.0f /(a * dist * dist + b * dist + 1.0f);
-
 
     //ambient light
     float ambient = 0.2f;
@@ -55,8 +45,7 @@ vec4 poinLight()
     float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
     float specular = specAmount * specularLight;
 
-    vec2 texResized = texCoord * TexSize;
-    return ((texture(tex0, texResized) * (diffuse * inten + ambient) + texture(tex1, texResized).r * specular * inten) * vec4(ImGuiColor+lightColor)) * intensity;
+    return (texture(diffuse0, texCoord) * (diffuse * inten + ambient) + texture(specular0, texCoord).r * specular * inten) * lightColor;
 }
 
 vec4 directLight()
@@ -76,8 +65,7 @@ vec4 directLight()
     float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
     float specular = specAmount * specularLight;
 
-    vec2 texResized = texCoord * TexSize;
-    return ((texture(tex0, texResized) * (diffuse+ ambient) + texture(tex1, texResized).r * specular) * vec4(ImGuiColor+lightColor)) * intensity;
+    return (texture(diffuse0, texCoord) * (diffuse+ ambient) + texture(specular0, texCoord).r * specular) * lightColor;
 }
 
 vec4 spotLight()
@@ -104,9 +92,7 @@ vec4 spotLight()
 	float angle = dot(vec3(0.0f, -1.0f, 0.0f), -lightDirection);
 	float inten = clamp((angle - outerCone) / (innerCone - outerCone), 0.0f, 1.0f);
 
-    vec2 texResized = texCoord * TexSize;
-    return ((texture(tex0, texResized) * (diffuse * inten + ambient) + texture(tex1, texResized).r * specular * inten) * vec4(ImGuiColor+lightColor)) * intensity;
-}
+	return (texture(diffuse0, texCoord) * (diffuse + ambient) + texture(specular0, texCoord).r * specular) * lightColor;}
 
 void main()
 {
