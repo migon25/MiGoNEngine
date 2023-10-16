@@ -22,17 +22,20 @@ out vec2 texCoord;
 uniform mat4 camMatrix;
 // Imports the model matrix from the main function
 uniform mat4 model;
+uniform mat4 translation;
+uniform mat4 rotation;
+uniform mat4 scale;
 
 void main()
 {
    // Calculates current position, used to calculate the direction of light
-	crntPos = vec3(model * vec4(aPos, 1.0f));
+	crntPos = vec3(model * translation * -rotation * scale * vec4(aPos, 1.0f));
    //Normal matrix fpr the pyramid
    Normal = aNormal;
    //Assigns the color from the vertex data to "color"
    color = aColor;
    //Assigns texture coordinates from the vertex data to "texCoord"
-   texCoord = aTex;
+	texCoord = mat2(0.0, -1.0, 1.0, 0.0) * aTex;
 
    // Outputs the position/coordinates of all vertices
    gl_Position = camMatrix * vec4(crntPos, 1.0);
