@@ -27,9 +27,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
     <ClCompile Include="ShaderClass.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
@@ -40,9 +37,6 @@
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="VAO.cpp">
-      <Filter>Archivos de recursos</Filter>
-    </ClCompile>
-    <ClCompile Include="glad.c">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="stb.cpp">
@@ -79,6 +73,12 @@
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
     <ClCompile Include="Model.cpp">
+      <Filter>Archivos de recursos</Filter>
+    </ClCompile>
+    <ClCompile Include="glad.c">
+      <Filter>Archivos de recursos</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
   </ItemGroup>
