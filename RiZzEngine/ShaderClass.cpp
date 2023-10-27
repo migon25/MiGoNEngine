@@ -1,19 +1,34 @@
 #include "shaderClass.h"
+#include <stdexcept>
+#include <filesystem> // for C++17 and later
 
 std::string get_file_contents(const char* filename)
 {
 	std::ifstream in(filename, std::ios::binary);
-	if(in)
-	{
-		std::string contents;
-		in.seekg(0, std::ios::end);
-		contents.resize(in.tellg());
-		in.seekg(0, std::ios::beg);
-		in.read(&contents[0], contents.size());
-		in.close();
-		return (contents);
+	if (!in) {
+		throw std::runtime_error("Failed to open file: " + std::string(filename));
 	}
-	throw(errno);
+
+	// Get the file size using std::filesystem::file_size
+	const std::filesystem::path filePath(filename);
+	std::size_t fileSize = std::filesystem::file_size(filePath);
+
+	std::string contents;
+	contents.resize(fileSize);
+
+	in.read(&contents[0], fileSize);
+
+	if (in.fail()) {
+		throw std::runtime_error("Error while reading file: " + std::string(filename));
+	}
+
+	in.close();
+
+	return contents;
+}
+Shader::Shader() 
+{
+
 }
 
 Shader::Shader(const char* vertexFile, const char* fragmentFile)

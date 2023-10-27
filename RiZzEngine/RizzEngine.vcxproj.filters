@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Archivos de origen\Shaders">
-      <UniqueIdentifier>{20288a90-95cd-418b-b427-237083b0403e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Archivos de origen\Textures">
       <UniqueIdentifier>{6edb8481-93ec-4f8a-b6d3-48586ee3d5ea}</UniqueIdentifier>
     </Filter>
@@ -78,23 +75,9 @@
     <ClCompile Include="glad.c">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="RizzEngine.cpp">
       <Filter>Archivos de recursos</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="default.vert">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
-    <None Include="default.frag">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
-    <None Include="light.frag">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
-    <None Include="light.vert">
-      <Filter>Archivos de origen\Shaders</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="shaderClass.h">
@@ -146,6 +129,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="RizzEngine.h">
+      <Filter>Archivos de encabezado</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>

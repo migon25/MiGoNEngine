@@ -71,12 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;$(IncludePath)</IncludePath>
+    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;D:\CITM\3rd 2\Game Engine\RiZzEngine\RizzEditor\shaders;$(IncludePath)</IncludePath>
     <LibraryPath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;$(IncludePath)</IncludePath>
+    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;D:\CITM\3rd 2\Game Engine\RiZzEngine\RizzEditor\shaders;$(IncludePath)</IncludePath>
     <LibraryPath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
@@ -114,7 +114,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalBMIDirectories>%(AdditionalBMIDirectories)</AdditionalBMIDirectories>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,7 +135,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>imgui</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalBMIDirectories>%(AdditionalBMIDirectories)</AdditionalBMIDirectories>
+      <AdditionalModuleDependencies>
+      </AdditionalModuleDependencies>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -148,6 +156,13 @@
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
       <CopyLocalSatelliteAssemblies>true</CopyLocalSatelliteAssemblies>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="RizzEditor.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="default.frag" />
+    <None Include="default.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
