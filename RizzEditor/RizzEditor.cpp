@@ -1,6 +1,4 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
+#include "Panels.h"
 #include "Model.h"
 #include "..\RiZzEngine\RizzEngine.h"
 
@@ -62,57 +60,6 @@ int initGlad()
 	return 1;
 }
 
-ImVec4 clear_color = ImVec4(0.1f, 0.1f, 0.1f, 1.0f);
-
-void initImGui(GLFWwindow* window)
-{
-	// Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-	// Setup Dear ImGui style
-	ImGui::StyleColorsDark();
-	//ImGui::StyleColorsLight();
-
-	// Setup Platform/Renderer backends
-	ImGui_ImplGlfw_InitForOpenGL(window, true);
-	ImGui_ImplOpenGL3_Init("#version 130");
-}
-
-void renderImGui()
-{
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplGlfw_NewFrame();
-	ImGui::NewFrame();
-
-	{
-		static float f = 0.0f;
-		static int counter = 0;
-
-		ImGui::Begin("Hello, world!");                          // Create a window called "Hello, world!" and append into it.
-
-		ImGui::Text("This is some useful text.");              // Edit bools storing our window open/close state
-
-		ImGui::SliderFloat("float", &f, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
-		ImGui::ColorEdit3("clear color", (float*)&clear_color); // Edit 3 floats representing a color
-
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
-			counter++;
-		ImGui::SameLine();
-		ImGui::Text("counter = %d", counter);
-
-		ImGui::End();
-	}
-
-	// Rendering
-	ImGui::Render();
-	glClearColor(clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w);
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-}
-
 int main() {
 
 	auto window = initGLFWwindowforOpengl();
@@ -128,7 +75,7 @@ int main() {
 	Engine.LoadModels();
 
 
-	initImGui(window);
+	Panels panel(window);
 
 	//MAin while loop. Window is open until the
 	//ESCAPE button is pressed by the user
@@ -141,11 +88,12 @@ int main() {
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 
-		Engine.camera.Imputs(window);
+		if(!panel.io->WantCaptureMouse)
+			Engine.camera.Imputs(window);
 		Engine.camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 		//glClearColor(0.1f,0.1f,0.1f,1.0f);
 		Engine.Render();
-		renderImGui();
+		panel.Render(Engine);
 
 		//Engine.model.Draw(shaderProgram, Engine.camera);
 
