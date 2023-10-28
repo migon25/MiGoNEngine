@@ -42,6 +42,8 @@ void Panels::Render(RizzEngine& Engine)
 		ImGui::SameLine();
 		ImGui::Text("counter = %d", counter);
 
+		ImGui::Checkbox("WireFrame Mode", &Engine.wireframeMode);
+
 		ImGui::End();
 	}
 

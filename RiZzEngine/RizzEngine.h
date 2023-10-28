@@ -12,6 +12,7 @@ public:
 
 	float lightColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float scale = 1.0f;
+	bool wireframeMode = false;
 
 	Camera camera;
 	RizzEngine();

@@ -10,7 +10,7 @@ RizzEngine::RizzEngine()
 void RizzEngine::LoadModels()
 {
 
-	Model model("models/map/scene.gltf");
+	Model model("models/katana/scene.gltf");
 	Model model1("models/bunny/scene.gltf");
 
 	RizzEngine::model.push_back(model);
@@ -20,6 +20,8 @@ void RizzEngine::LoadModels()
 void RizzEngine::Render()
 {
 	Shader shaderProgram("default.vert", "default.frag");
+
+	RizzEngine::shader.push_back(shaderProgram);
 
 	// Take care of all the light related things
 	glm::vec3 lightPos = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -36,4 +38,6 @@ void RizzEngine::Render()
 	{
 		model[i].Model::Draw(shaderProgram, camera);
 	}
+
+	glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);
 }
