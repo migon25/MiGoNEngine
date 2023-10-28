@@ -71,13 +71,13 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;D:\CITM\3rd 2\Game Engine\RiZzEngine\RizzEditor\shaders;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)RiZzEngine\libraries\include;$(SolutionDir)RiZzEngine\imgui;$(SolutionDir)RiZzEngine;$(SolutionDir)RizzEditor\shaders;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <IncludePath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\include;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\imgui;D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine;D:\CITM\3rd 2\Game Engine\RiZzEngine\RizzEditor\shaders;$(IncludePath)</IncludePath>
-    <LibraryPath>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)RiZzEngine\libraries\include;$(SolutionDir)RiZzEngine\imgui;$(SolutionDir)RiZzEngine;$(SolutionDir)RizzEditor\shaders;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)RiZzEngine\libraries\lib;$(LibraryPath)</LibraryPath>
     <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -124,7 +124,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)RiZzEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -147,7 +147,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>D:\CITM\3rd 2\Game Engine\RiZzEngine\RiZzEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)RiZzEngine\libraries\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -35,8 +35,10 @@ void Panels::Render(RizzEngine& Engine)
 		ImGui::SliderFloat("float", (float*)&Engine.scale, 0.0f, 1.0f);            // Edit 1 float using a slider from 0.0f to 1.0f
 		ImGui::ColorEdit3("clear color", (float*)&Engine.lightColor); // Edit 3 floats representing a color
 
-		if (ImGui::Button("Button"))                            // Buttons return true when clicked (most widgets return true when edited/activated)
+		if (ImGui::Button("Button")) {                           // Buttons return true when clicked (most widgets return true when edited/activated)
 			counter++;
+			printf("counter %i", counter);
+		}
 		ImGui::SameLine();
 		ImGui::Text("counter = %d", counter);
 
