@@ -11,7 +11,7 @@ void RizzEngine::LoadModels()
 {
 
 	Model model("models/map/scene.gltf");
-	Model model1("models/scroll/scene.gltf");
+	Model model1("models/bunny/scene.gltf");
 
 	RizzEngine::model.push_back(model);
 	RizzEngine::model.push_back(model1);
