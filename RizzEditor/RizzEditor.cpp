@@ -68,6 +68,7 @@ int main() {
 
 	// Specify the viewport of OpenGL in the window
 	// from x = 0, y = 0, to x = WINDW_WIDTH, y = WINDOW_HEIGHT
+	FBO fbo(WINDOW_WIDTH, WINDOW_HEIGHT);
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 
@@ -85,12 +86,14 @@ int main() {
 			processInput(window); //process if the user has pressed ESCAPE button
 		}
 		layer.BeginLayer();
+		fbo.Bind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 		if(!ImGui::GetIO().WantCaptureMouse)
 			engine.camera.Imputs(window);
 		engine.camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 		engine.Render();
+		fbo.Unbind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 		layer.Render();
 
