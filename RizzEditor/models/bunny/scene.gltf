@@ -1,6 +1,6 @@
 {
     "asset" : {
-        "generator" : "Khronos glTF Blender I/O v1.5.17",
+        "generator" : "Khronos glTF Blender I/O v1.8.19",
         "version" : "2.0"
     },
     "scene" : 0,
@@ -21,6 +21,11 @@
                 0,
                 0,
                 0.7071068286895752
+            ],
+            "scale" : [
+                19.32301139831543,
+                19.323013305664062,
+                19.323013305664062
             ],
             "translation" : [
                 0,
@@ -67,12 +72,9 @@
     "images" : [
         {
             "mimeType" : "image/png",
-            "name" : "diffuse",
+            "name" : "baseColor",
             "uri" : "baseColor.png"
-        },
-	{
-	    "uri" : "metallicRoughness.png"
-	}
+        }
     ],
     "accessors" : [
         {

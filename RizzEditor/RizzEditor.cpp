@@ -1,4 +1,4 @@
-#include "Panels.h"
+#include "Layers.h"
 #include "Model.h"
 #include "..\RiZzEngine\RizzEngine.h"
 
@@ -71,11 +71,10 @@ int main() {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 
-	RizzEngine Engine;
-	Engine.LoadModels();
+	RizzEngine engine;
+	engine.LoadModels();
 
-
-	Panels panel(window);
+	Layers layer(window,engine, &fbo);
 
 	//MAin while loop. Window is open until the
 	//ESCAPE button is pressed by the user
@@ -85,18 +84,18 @@ int main() {
 		{
 			processInput(window); //process if the user has pressed ESCAPE button
 		}
-
+		layer.BeginLayer();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
+		if(!ImGui::GetIO().WantCaptureMouse)
+			engine.camera.Imputs(window);
+		engine.camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
-		if(!panel.io->WantCaptureMouse)
-			Engine.camera.Imputs(window);
-		Engine.camera.updateMatrix(45.0f, 0.1f, 1000.0f);
-		//glClearColor(0.1f,0.1f,0.1f,1.0f);
-		Engine.Render();
-		panel.Render(Engine);
+		engine.Render();
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
+		layer.Render();
 
 		//Engine.model.Draw(shaderProgram, Engine.camera);
-
+		layer.EndLayer();
 		//Check and call events and swap buffers
 		glfwSwapBuffers(window);
 		glfwPollEvents();

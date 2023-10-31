@@ -9,7 +9,6 @@ RizzEngine::RizzEngine()
 
 void RizzEngine::LoadModels()
 {
-
 	Model model("models/katana/scene.gltf");
 	Model model1("models/bunny/scene.gltf");
 
