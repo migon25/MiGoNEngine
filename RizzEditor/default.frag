@@ -22,7 +22,7 @@ uniform vec4 lightColor;
 // Gets the position of the camera from the main function for specular lighting
 uniform vec3 camPos;
 
-vec4 poinLight()
+vec4 pointLight()
 {
     vec3 lightVec = lightPos - crntPos;
     float dist = length(lightVec);
@@ -97,5 +97,5 @@ vec4 spotLight()
 void main()
 {
     // outputs final color;
-    FragColor = spotLight();
+    FragColor = directLight();
 }

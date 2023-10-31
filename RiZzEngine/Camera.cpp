@@ -1,5 +1,12 @@
 #include "Camera.h"
 
+Camera::Camera()
+{
+	Camera::width = WINDOW_WIDTH;
+	Camera::height = WINDOW_HEIGHT;
+	Position = CAMERA_INIT_POS;
+}
+
 Camera::Camera(int width, int height, glm::vec3 position)
 {
 	Camera::width = width;
@@ -52,11 +59,11 @@ void Camera::Imputs(GLFWwindow* window)
 	}
 	if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 	{
-		speed = 0.01f;
+		speed = 0.1f;
 	}
 	else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE)
 	{
-		speed = 0.002f;
+		speed = 0.02f;
 	}
 
 	// Handles mouse inputs

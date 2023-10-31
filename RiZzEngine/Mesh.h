@@ -5,6 +5,7 @@
 
 #include"VAO.h"
 #include"EBO.h"
+#include "FBO.h"
 #include"Camera.h"
 #include"Texture.h"
 
