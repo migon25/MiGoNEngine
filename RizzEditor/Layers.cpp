@@ -1,6 +1,17 @@
 #include "Layers.h"
+#include <iostream>
+#include <string>
+
+#if defined(_WIN32)
+#include <windows.h>
+#elif defined(__APPLE__)
+#include <cstdlib>
+#elif defined(__linux__)
+#include <cstdlib>
+#endif
 
 static void MenuFile();
+void OpenWebsite(const std::string& url);
 
 Layers::Layers(GLFWwindow* window, RizzEngine& engine, FBO* frameBuffer) : Engine(engine), window(window), fbo(frameBuffer)
 {
@@ -45,19 +56,43 @@ void Layers::BeginLayer()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplGlfw_NewFrame();
 	ImGui::NewFrame();
+
+    // Create the docking environment
+    ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus |  ImGuiWindowFlags_NoBackground;
+
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
+    ImGui::Begin("InvisibleWindow", nullptr, windowFlags);
+    ImGui::PopStyleVar(3);
+
+    ImGuiID dockSpaceId = ImGui::GetID("InvisibleWindowDockSpace");
+
+    ImGui::DockSpace(dockSpaceId, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
+    ImGui::End();
 }
 
 void Layers::Render()
 {
     ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+
     AppMainMenuBar();
 	ImGui::ShowDemoWindow();
 
     ImGui::Begin("Viewport");
     {
+
         float width = ImGui::GetContentRegionAvail().x;
         float height = ImGui::GetContentRegionAvail().y;
-
+        if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(),ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight())))
+        {
+            Engine.engineCamera.Imputs(window);
+        }
         ImGui::Image((ImTextureID)fbo->getFrameTexture(), ImGui::GetContentRegionAvail(),ImVec2(0, 1),ImVec2(1, 0));
     }
     ImGui::End();
@@ -87,6 +122,8 @@ void Layers::EndLayer()
 
 void Layers::AppMainMenuBar()
 {
+    const std::string GitHubRepo = "https://github.com/migon25/RiZzEngine";
+    const std::string ricky = "https://www.youtube.com/watch?v=xvFZjo5PgG0";
     if (ImGui::BeginMainMenuBar())
     {
         if (ImGui::BeginMenu("File"))
@@ -94,15 +131,20 @@ void Layers::AppMainMenuBar()
             MenuFile();
             ImGui::EndMenu();
         }
-        if (ImGui::BeginMenu("Edit"))
+        if (ImGui::BeginMenu("Info"))
         {
-            if (ImGui::MenuItem("Undo", "CTRL+Z")) {}
-            if (ImGui::MenuItem("Redo", "CTRL+Y", false, false)) {}  // Disabled item
+            if (ImGui::MenuItem("About")) {}
+            if (ImGui::MenuItem("Github")) 
+            {
+                OpenWebsite(GitHubRepo);
+            }
             ImGui::Separator();
-            if (ImGui::MenuItem("Cut", "CTRL+X")) {}
-            if (ImGui::MenuItem("Copy", "CTRL+C")) {}
-            if (ImGui::MenuItem("Paste", "CTRL+V")) {}
+            if (ImGui::MenuItem(":D"))
+            {
+                OpenWebsite(ricky);
+            }
             ImGui::EndMenu();
+           
         }
         if (ImGui::BeginMenu("Property Panel"))
         {
@@ -187,5 +229,45 @@ static void MenuFile()
     }
     if (ImGui::MenuItem("Checked", NULL, true)) {}
     ImGui::Separator();
-    if (ImGui::MenuItem("Quit", "Alt+F4")) {}
+
+    if (ImGui::Button("Quit")) 
+    {
+        ImGui::OpenPopup("Close program?");
+    }
+
+    if (ImGui::BeginPopupModal("Close program?", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("      Do you want to close program?\n");
+        ImGui::Separator();
+
+        if (ImGui::Button("YES", ImVec2(120, 0))) { glfwSetWindowShouldClose(glfwGetCurrentContext(), true); }
+        ImGui::SetItemDefaultFocus();
+        ImGui::SameLine();
+        if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+        ImGui::EndPopup();
+    }
+}
+
+// just some code to open Websites
+void OpenWebsite(const std::string& url) {
+    std::cout << "Opening URL: " << url << std::endl;
+
+#if defined(_WIN32)
+    ShellExecuteA(nullptr, "open", url.c_str(), nullptr, nullptr, SW_SHOWNORMAL);
+    printf("ShellExecute called.");
+    if (GetLastError() != 0) {
+        std::cout << "Error: " << GetLastError() << std::endl;
+    }
+#elif defined(__APPLE__)
+    // On macOS, use the 'open' command to open a URL
+    std::string command = "open " + url;
+    system(command.c_str());
+#elif defined(__linux__)
+    // On Linux, use the 'xdg-open' command to open a URL
+    std::string command = "xdg-open " + url;
+    system(command.c_str());
+#else
+    // Unsupported platform
+    printf("Opening websites is not supported on this platform.");
+#endif
 }

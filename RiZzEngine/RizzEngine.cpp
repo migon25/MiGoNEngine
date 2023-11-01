@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "Model.h"
 
-RizzEngine::RizzEngine()
+RizzEngine::RizzEngine(Camera& camera) : engineCamera(camera)
 {
 
 }
@@ -35,7 +35,7 @@ void RizzEngine::Render()
 		// Go over all meshes and draw each one
 	for (unsigned int i = 0; i < model.size(); i++)
 	{
-		model[i].Model::Draw(shaderProgram, camera);
+		model[i].Model::Draw(shaderProgram, engineCamera);
 	}
 
 	glPolygonMode(GL_FRONT_AND_BACK, wireframeMode ? GL_LINE : GL_FILL);

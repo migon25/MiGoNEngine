@@ -19,7 +19,7 @@ public:
 	void EndLayer();
 
 
-private:
+protected:
 	void AppMainMenuBar();
 	void CreatePanels();
 	RizzEngine& Engine;

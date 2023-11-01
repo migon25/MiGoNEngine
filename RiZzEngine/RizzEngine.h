@@ -14,8 +14,8 @@ public:
 	float scale = 1.0f;
 	bool wireframeMode = false;
 
-	Camera camera;
-	RizzEngine();
+	Camera& engineCamera;
+	RizzEngine(Camera& camera);
 	void LoadModels();
 	void Render();
 };
