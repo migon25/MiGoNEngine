@@ -1,8 +1,9 @@
 #ifndef MODEL_CLASS_H
 #define MODEL_CLASS_H
 
-#include<json/json.h>
-#include"Mesh.h"
+#include <json/json.h>
+#include "Mesh.h"
+#include "GameObject.h"
 
 using json = nlohmann::json;
 
@@ -11,18 +12,21 @@ class Model
 {
 public:
 	// Loads in a model from a file and stores tha information in 'data', 'JSON', and 'file'
-	Model(const char* file);
+	Model(GameObject* object);
 
 	void Draw(Shader& shader, Camera& camera);
+	std::vector<Mesh*> meshes;
 
 private:
+	void loadModel(const char* file);
+
 	// Variables for easy access
 	const char* file;
 	std::vector<unsigned char> data;
 	json JSON;
+	GameObject* modelObj;
 
 	// All the meshes and transformations
-	std::vector<Mesh> meshes;
 	std::vector<glm::vec3> translationsMeshes;
 	std::vector<glm::quat> rotationsMeshes;
 	std::vector<glm::vec3> scalesMeshes;

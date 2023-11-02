@@ -6,13 +6,17 @@
 class PropertyPanel : public Panel
 {
 public:
-	PropertyPanel(RizzEngine& engine);
+	PropertyPanel(std::vector<GameObject*>& model);
 	virtual ~PropertyPanel();
 
 	void Render() override;
+	void ObjectSelection();
+
+	int objectSelected = 0;
 
 private:
-	RizzEngine& Engine;
+	std::vector<GameObject*>& Model;
+
 };
 
 #endif //PROPERTY_PANEL_H

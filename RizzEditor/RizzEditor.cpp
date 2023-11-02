@@ -22,13 +22,8 @@ std::string GetHardwareInfo() {
     return info.str();
 }
 
-void RenderEngineInfoWidget() {
-
-
-
-
-
-}
+std::vector<GameObject*> GameObjects;
+std::vector<Model*> objectModels;
 
 int main() {
 
@@ -44,10 +39,15 @@ int main() {
 	glEnable(GL_DEPTH_TEST);
 
 	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, CAMERA_INIT_POS);
-	RizzEngine engine(camera);
-	engine.LoadModels();
+	Shader shaderProgram("default.vert", "default.frag");
+	RizzEngine engine(GameObjects, objectModels);
 
-	Layers layer(window,engine, &fbo);
+	GameObject* cube = new GameObject();
+	cube->path = "models/katana/scene.gltf";
+	cube->name = "cube";
+	GameObjects.push_back(cube);
+
+	Layers layer(window, camera, &fbo, GameObjects);
 
 	// FPS Calculation
 	static double lastTime = 0.0;
@@ -68,12 +68,13 @@ int main() {
 		fbo.Bind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 
-		engine.engineCamera.updateMatrix(45.0f, 0.1f, 1000.0f);
+		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
 
 		static std::vector<float> fpsHistory;
 		const int maxHistorySize = 100;  // Adjust as needed
 
-		engine.Render();
+		engine.Render(shaderProgram, camera);
+
 		ImGui::Begin("Engine Information");
 		ImGui::Text("FPS: %.2f", fps);
 

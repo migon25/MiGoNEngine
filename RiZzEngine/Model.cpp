@@ -1,6 +1,11 @@
 #include"Model.h"
 
-Model::Model(const char* file)
+Model::Model(GameObject* object) : modelObj(object)
+{
+	loadModel(modelObj->path);
+}
+
+void Model::loadModel(const char* file)
 {
 	// Make a JSON object
 	std::string text = get_file_contents(file);
@@ -19,7 +24,7 @@ void Model::Draw(Shader& shader, Camera& camera)
 	// Go over all meshes and draw each one
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].Mesh::Draw(shader, camera, matricesMeshes[i]);
+		meshes[i]->Mesh::Draw(shader, camera, matricesMeshes[i]);
 	}
 }
 
@@ -45,7 +50,7 @@ void Model::loadMesh(unsigned int indMesh)
 	std::vector<Texture> textures = getTextures();
 
 	// Combine the vertices, indices, and textures into a mesh
-	meshes.push_back(Mesh(vertices, indices, textures));
+	meshes.push_back(new Mesh(vertices, indices, textures));
 }
 
 void Model::traverseNode(unsigned int nextNode, glm::mat4 matrix)

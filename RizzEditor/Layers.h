@@ -12,7 +12,7 @@ class Layers
 {
 public:
 	glm::vec4 clear_color = glm::vec4(0.1f, 0.1f, 0.1f, 1.0f);
-	Layers(GLFWwindow* window, RizzEngine& engine, FBO* frameBuffer);
+	Layers(GLFWwindow* window, Camera& camera, FBO* frameBuffer, std::vector<GameObject*>& model);
 
 	void Render();
 	void BeginLayer();
@@ -22,10 +22,10 @@ public:
 protected:
 	void AppMainMenuBar();
 	void CreatePanels();
-	RizzEngine& Engine;
+	Camera& camera;
 	GLFWwindow* window;
 	FBO* fbo;
-
+	std::vector<GameObject*>& Model;
 	std::unique_ptr<Panel> m_PropertyPanel;
 
 	std::vector<Panel*> panels;

@@ -13,7 +13,7 @@
 static void MenuFile();
 void OpenWebsite(const std::string& url);
 
-Layers::Layers(GLFWwindow* window, RizzEngine& engine, FBO* frameBuffer) : Engine(engine), window(window), fbo(frameBuffer)
+Layers::Layers(GLFWwindow* window, Camera& camera, FBO* frameBuffer, std::vector<GameObject*>& model) : camera(camera), window(window), fbo(frameBuffer), Model(model)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -46,7 +46,7 @@ Layers::Layers(GLFWwindow* window, RizzEngine& engine, FBO* frameBuffer) : Engin
 
 void Layers::CreatePanels()
 {
-    PropertyPanel panel1(Engine);
+    PropertyPanel panel1(Model);
     Layers::m_PropertyPanel = std::make_unique<PropertyPanel>(panel1);
     Layers::panels.push_back(m_PropertyPanel.get());
 }
@@ -79,22 +79,23 @@ void Layers::BeginLayer()
 
 void Layers::Render()
 {
-    ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
+    //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 
     AppMainMenuBar();
 	ImGui::ShowDemoWindow();
 
     ImGui::Begin("Viewport");
     {
-
+        ImGui::BeginChild("GameRender");
         float width = ImGui::GetContentRegionAvail().x;
         float height = ImGui::GetContentRegionAvail().y;
         if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(),ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight())))
         {
-            Engine.engineCamera.Imputs(window);
+            camera.Imputs(window);
         }
         ImGui::Image((ImTextureID)fbo->getFrameTexture(), ImGui::GetContentRegionAvail(),ImVec2(0, 1),ImVec2(1, 0));
     }
+    ImGui::EndChild();
     ImGui::End();
 
     for (auto &panel : panels)

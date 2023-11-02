@@ -4,6 +4,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 {
 	// Assigns the texture type
 	type = texType;
+	unit = slot;
 
 	// stores the width, height and the number of color channels of the image
 	int widthImg, heightImg, numColCh;
@@ -18,7 +19,7 @@ Texture::Texture(const char* image, const char* texType, GLuint slot)
 	glGenTextures(1, &ID);
 	// Assigns the texture to a texture Unit
 	glActiveTexture(GL_TEXTURE0 + slot);
-	unit = slot;
+
 	glBindTexture(GL_TEXTURE_2D, ID);
 
 	// Configures the type of algorithm that is used to scale image
