@@ -15,40 +15,56 @@ PropertyPanel::~PropertyPanel()
 
 void PropertyPanel::Render()
 {
-	static int counter = 0;
-	ImGui::Begin("Properies", &active);// Create a window called "Hello, world!" and append into it.
-	ImGui::Text("This is the property panel");// Edit bools storing our window open/close state
+	ImGui::Begin("Mesh properties", &active);// Create a window called "Hello, world!" and append into it.
 	ObjectSelection();
-	if (Model.size() > 0)
+	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
 	{
-		ImGui::SliderFloat("scale", &Model[objectSelected]->scale, 0.0f, 1.0f);// Edit 1 float using a slider from 0.0f to 1.0f
-	
-		ImGui::Separator();
+		if (ImGui::BeginTabItem("Transform"))
+		{
+			if (Model.size() > 0)
+			{
+				if (ImGui::CollapsingHeader("Position"))
+				{
+					ImGui::DragFloat("X", &Model[objectSelected]->positionX, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Y", &Model[objectSelected]->positionY, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Z", &Model[objectSelected]->positionZ, 0.1f, 0.0f, +FLT_MAX);
+					glm::mat4 translationMatrix = glm::mat4(1.0f); // Initialize as identity matrix
+					translationMatrix = glm::translate(translationMatrix, glm::vec3(Model[objectSelected]->positionX, Model[objectSelected]->positionY, Model[objectSelected]->positionZ));
+					Model[objectSelected]->objTranslation = translationMatrix;
+				}
 
-		ImGui::BeginChild("Rotation");
-		// Add rotation sliders
-		ImGui::SliderFloat("Pitch", &Model[objectSelected]->pitch, -180.0f, 180.0f);
-		ImGui::SliderFloat("Yaw", &Model[objectSelected]->yaw, -180.0f, 180.0f);
-		ImGui::SliderFloat("Roll", &Model[objectSelected]->roll, -180.0f, 180.0f);
-		// Create an identity matrix
-		glm::mat4 rotationMatrix(1.0f);
-		// Apply pitch rotation
-		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-		// Apply yaw rotation
-		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-		// Apply roll rotation
-		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->roll), glm::vec3(0.0f, 0.0f, 1.0f));
-		Model[objectSelected]->objRotation = rotationMatrix;
-	}
-	if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
-	{
-		counter++;
-		printf("counter %i", counter);
-	}
+				if (ImGui::CollapsingHeader("Scale"))
+				{
+					ImGui::DragFloat("scaleObject", &Model[objectSelected]->scaleObject, 0.1f, 0.0f, +FLT_MAX);
 
-	ImGui::SameLine();
-	ImGui::Text("counter = %d", counter);
-	ImGui::EndChild();
+					ImGui::DragFloat("Scale X", &Model[objectSelected]->scaleX, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Scale Y", &Model[objectSelected]->scaleY, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Scale Z", &Model[objectSelected]->scaleZ, 0.1f, 0.0f, +FLT_MAX);
+				}
+
+				if (ImGui::CollapsingHeader("Rotation"))
+				{
+					ImGui::DragFloat("Pitch", &Model[objectSelected]->pitch, 0.5f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Yaw", &Model[objectSelected]->yaw, 0.5f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Roll", &Model[objectSelected]->roll, 0.5f, -FLT_MAX, +FLT_MAX);
+
+					glm::mat4 rotationMatrix(1.0f);
+
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->roll), glm::vec3(0.0f, 0.0f, 1.0f));
+					
+					Model[objectSelected]->objRotation = rotationMatrix;
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Texture"))
+		{
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
 	ImGui::End();
 }
 

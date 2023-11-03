@@ -34,6 +34,7 @@ Layers::Layers(GLFWwindow* _window, RizzEngine& _engine, Camera& _camera, FBO* _
 	{
 		style.WindowRounding = 0.0f;
 		style.Colors[ImGuiCol_WindowBg].w = 0.0f;
+        style.FrameRounding = 3.0f;
 	}
 
 	// Setup Platform/Renderer backends

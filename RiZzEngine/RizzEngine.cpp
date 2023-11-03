@@ -41,8 +41,12 @@ void RizzEngine::Render(Shader& shader, Camera& camera)
 		shader.Activate();
 		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "model"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objModel));
 		glUniform4f(glGetUniformLocation(shader.ID, "lightColor"), lightColor[0], lightColor[1], lightColor[2], lightColor[3]);
-		glUniform1f(glGetUniformLocation(shader.ID, "imguiScale"),m_gameObject[i]->scale);
+		glUniform1f(glGetUniformLocation(shader.ID, "imguiScale"),m_gameObject[i]->scaleObject);
+		glUniform1f(glGetUniformLocation(shader.ID, "scaleX"), m_gameObject[i]->scaleX);
+		glUniform1f(glGetUniformLocation(shader.ID, "scaleY"), m_gameObject[i]->scaleY);
+		glUniform1f(glGetUniformLocation(shader.ID, "scaleZ"), m_gameObject[i]->scaleZ);
 		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "rotationMatrix"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objRotation));
+		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "translation"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objTranslation));
 		glUniform3f(glGetUniformLocation(shader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 		model[i]->Model::Draw(shader, camera);

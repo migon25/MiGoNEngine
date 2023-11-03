@@ -48,7 +48,7 @@ int main() {
 	GameObjects.push_back(cube);
 
 	GameObject* bunny = new GameObject();
-	bunny->path = "models/bunny/scene.gltf";
+	bunny->path = "models/character/scene.gltf";
 	bunny->name = "bunny";
 	GameObjects.push_back(bunny);
 

@@ -24,14 +24,17 @@ uniform mat4 camMatrix;
 uniform mat4 model;
 uniform mat4 translation;
 uniform mat4 rotation;
-uniform mat4 scale;
-uniform float imguiScale;
 uniform mat4 rotationMatrix;
+uniform mat4 scale;
+uniform float scaleX;
+uniform float scaleY;
+uniform float scaleZ;
+uniform float imguiScale;
 
 void main()
 {
    // Calculates current position, used to calculate the direction of light
-	crntPos = vec3(model * translation * rotationMatrix * -rotation * scale * vec4(aPos, 1.0f)) * imguiScale;
+	crntPos = vec3(model * translation * rotationMatrix * -rotation * vec4(aPos.x * scaleX, aPos.y * scaleY, aPos.z * scaleZ, 1.0)) * imguiScale;
    //Normal matrix fpr the pyramid
    Normal = aNormal;
    //Assigns the color from the vertex data to "color"
