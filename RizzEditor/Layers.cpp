@@ -13,7 +13,7 @@
 static void MenuFile();
 void OpenWebsite(const std::string& url);
 
-Layers::Layers(GLFWwindow* window, Camera& camera, FBO* frameBuffer, std::vector<GameObject*>& model) : camera(camera), window(window), fbo(frameBuffer), Model(model)
+Layers::Layers(GLFWwindow* _window, RizzEngine& _engine, Camera& _camera, FBO* _frameBuffer, std::vector<GameObject*>& _model) : window(_window), engine(_engine), camera(_camera),  fbo(_frameBuffer), model(_model)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
@@ -46,7 +46,7 @@ Layers::Layers(GLFWwindow* window, Camera& camera, FBO* frameBuffer, std::vector
 
 void Layers::CreatePanels()
 {
-    PropertyPanel panel1(Model);
+    PropertyPanel panel1(model);
     Layers::m_PropertyPanel = std::make_unique<PropertyPanel>(panel1);
     Layers::panels.push_back(m_PropertyPanel.get());
 }
@@ -86,6 +86,7 @@ void Layers::Render()
 
     ImGui::Begin("Viewport");
     {
+        ImGui::Checkbox("WireFrame Mode", &engine.wireframeMode);
         ImGui::BeginChild("GameRender");
         float width = ImGui::GetContentRegionAvail().x;
         float height = ImGui::GetContentRegionAvail().y;

@@ -44,10 +44,15 @@ int main() {
 
 	GameObject* cube = new GameObject();
 	cube->path = "models/katana/scene.gltf";
-	cube->name = "cube";
+	cube->name = "katana";
 	GameObjects.push_back(cube);
 
-	Layers layer(window, camera, &fbo, GameObjects);
+	GameObject* bunny = new GameObject();
+	bunny->path = "models/bunny/scene.gltf";
+	bunny->name = "bunny";
+	GameObjects.push_back(bunny);
+
+	Layers layer(window,engine, camera, &fbo, GameObjects);
 
 	// FPS Calculation
 	static double lastTime = 0.0;

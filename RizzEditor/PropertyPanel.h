@@ -13,7 +13,6 @@ public:
 	void ObjectSelection();
 
 	int objectSelected = 0;
-
 private:
 	std::vector<GameObject*>& Model;
 

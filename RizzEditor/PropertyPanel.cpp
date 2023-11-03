@@ -22,15 +22,33 @@ void PropertyPanel::Render()
 	if (Model.size() > 0)
 	{
 		ImGui::SliderFloat("scale", &Model[objectSelected]->scale, 0.0f, 1.0f);// Edit 1 float using a slider from 0.0f to 1.0f
+	
+		ImGui::Separator();
+
+		ImGui::BeginChild("Rotation");
+		// Add rotation sliders
+		ImGui::SliderFloat("Pitch", &Model[objectSelected]->pitch, -180.0f, 180.0f);
+		ImGui::SliderFloat("Yaw", &Model[objectSelected]->yaw, -180.0f, 180.0f);
+		ImGui::SliderFloat("Roll", &Model[objectSelected]->roll, -180.0f, 180.0f);
+		// Create an identity matrix
+		glm::mat4 rotationMatrix(1.0f);
+		// Apply pitch rotation
+		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+		// Apply yaw rotation
+		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+		// Apply roll rotation
+		rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->roll), glm::vec3(0.0f, 0.0f, 1.0f));
+		Model[objectSelected]->objRotation = rotationMatrix;
 	}
 	if (ImGui::Button("Button")) // Buttons return true when clicked (most widgets return true when edited/activated)
 	{
 		counter++;
 		printf("counter %i", counter);
 	}
+
 	ImGui::SameLine();
 	ImGui::Text("counter = %d", counter);
-
+	ImGui::EndChild();
 	ImGui::End();
 }
 
