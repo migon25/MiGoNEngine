@@ -38,7 +38,7 @@ int main() {
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, CAMERA_INIT_POS);
+	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, CAMERA_INIT_POS, GameObjects);
 	Shader shaderProgram("default.vert", "default.frag");
 	RizzEngine engine(GameObjects, objectModels);
 
@@ -48,9 +48,11 @@ int main() {
 	GameObjects.push_back(cube);
 
 	GameObject* bunny = new GameObject();
-	bunny->path = "models/character/scene.gltf";
+	bunny->path = "models/map/scene.gltf";
 	bunny->name = "bunny";
 	GameObjects.push_back(bunny);
+
+	camera.SetObjects(GameObjects);
 
 	Layers layer(window,engine, camera, &fbo, GameObjects);
 

@@ -14,6 +14,7 @@ struct GameObject
 
 	glm::vec3 modelColor = glm::vec3(0.5f, 0.5f, 0.5f);
 	glm::vec3 modelLineColor = glm::vec3(0.2f, 0.2f, 0.2f);
+	glm::quat orientation;
 
 	glm::mat4 objModel = glm::mat4(1.0f);
 	float scaleObject = 1.0f;
@@ -32,6 +33,20 @@ struct GameObject
 	float positionX = 0.0f;
 	float positionY = 0.0f;
 	float positionZ = 0.0f;
+
+	// Method to get the position of the object
+	glm::vec3 GetPosition() const {
+		return glm::vec3(positionX, positionY, positionZ);
+	}
+
+	// Method to get the orientation of the object
+	glm::vec3 GetOrientation() const {
+		return glm::vec3(pitch, yaw, roll);
+	}
+
+	void SetOrientation(const glm::quat& newOrientation) {
+		orientation = newOrientation;
+	}
 };
 
 #endif //GAME_OBJECT_H

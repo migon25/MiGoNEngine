@@ -43,6 +43,7 @@ Layers::Layers(GLFWwindow* _window, RizzEngine& _engine, Camera& _camera, FBO* _
 
     //create the panels
     CreatePanels();
+    m_PropertyPanel.get()->SwitchActive();
 }
 
 void Layers::CreatePanels()
@@ -84,7 +85,6 @@ void Layers::Render()
 
     AppMainMenuBar();
 	ImGui::ShowDemoWindow();
-
     ImGui::Begin("Viewport");
     {
         ImGui::Checkbox("WireFrame Mode", &engine.wireframeMode);
@@ -148,11 +148,6 @@ void Layers::AppMainMenuBar()
             }
             ImGui::EndMenu();
            
-        }
-        if (ImGui::BeginMenu("Property Panel"))
-        {
-            m_PropertyPanel.get()->SwitchActive();
-            ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }
