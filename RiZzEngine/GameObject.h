@@ -24,14 +24,14 @@ struct GameObject
 	float scaleZ = 1.0f;
 
 	glm::mat4 objRotation = glm::mat4(1.0f);
-	float pitch = 1.0f;
-	float yaw = 1.0f;
-	float roll = 1.0f;
+	float pitch = 0.0f;
+	float yaw = 0.0f;
+	float roll = 0.0f;
 
 	glm::mat4 objTranslation = glm::mat4(1.0f);
-	float positionX = 1.0f;
-	float positionY = 1.0f;
-	float positionZ = 1.0f;
+	float positionX = 0.0f;
+	float positionY = 0.0f;
+	float positionZ = 0.0f;
 };
 
 #endif //GAME_OBJECT_H

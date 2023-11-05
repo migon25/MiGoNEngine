@@ -46,7 +46,7 @@ void RizzEngine::Render(Shader& shader, Camera& camera)
 		glUniform1f(glGetUniformLocation(shader.ID, "scaleY"), m_gameObject[i]->scaleY);
 		glUniform1f(glGetUniformLocation(shader.ID, "scaleZ"), m_gameObject[i]->scaleZ);
 		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "rotationMatrix"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objRotation));
-		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "translation"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objTranslation));
+		glUniformMatrix4fv(glGetUniformLocation(shader.ID, "translationMatrix"), 1, GL_FALSE, glm::value_ptr(m_gameObject[i]->objTranslation));
 		glUniform3f(glGetUniformLocation(shader.ID, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 
 		model[i]->Model::Draw(shader, camera);
