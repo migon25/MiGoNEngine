@@ -3,7 +3,7 @@
 #include "imgui.h"
 #include <stdio.h>
 
-PropertyPanel::PropertyPanel(std::vector<GameObject*>& model) : Model(model)
+PropertyPanel::PropertyPanel(std::vector<GameObject*>& model, Camera& camera) : Model(model), camera(camera)
 {
 
 }
@@ -15,62 +15,16 @@ PropertyPanel::~PropertyPanel()
 
 void PropertyPanel::Render()
 {
-	ImGui::Begin("Mesh properties", &active);// Create a window called "Hello, world!" and append into it.
 	ObjectSelection();
-	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
+	if (objectIsSelected == true)
 	{
-		if (ImGui::BeginTabItem("Transform"))
-		{
-			if (Model.size() > 0)
-			{
-				if (ImGui::CollapsingHeader("Position"))
-				{
-					ImGui::DragFloat("X", &Model[objectSelected]->positionX, 0.1f, 0.0f, +FLT_MAX);
-					ImGui::DragFloat("Y", &Model[objectSelected]->positionY, 0.1f, 0.0f, +FLT_MAX);
-					ImGui::DragFloat("Z", &Model[objectSelected]->positionZ, 0.1f, 0.0f, +FLT_MAX);
-					glm::mat4 translationMatrix = glm::mat4(1.0f); // Initialize as identity matrix
-					translationMatrix = glm::translate(translationMatrix, glm::vec3(Model[objectSelected]->positionX, Model[objectSelected]->positionY, Model[objectSelected]->positionZ));
-					Model[objectSelected]->objTranslation = translationMatrix;
-				}
-
-				if (ImGui::CollapsingHeader("Scale"))
-				{
-					ImGui::DragFloat("scaleObject", &Model[objectSelected]->scaleObject, 0.1f, 0.0f, +FLT_MAX);
-
-					ImGui::DragFloat("Scale X", &Model[objectSelected]->scaleX, 0.1f, 0.0f, +FLT_MAX);
-					ImGui::DragFloat("Scale Y", &Model[objectSelected]->scaleY, 0.1f, 0.0f, +FLT_MAX);
-					ImGui::DragFloat("Scale Z", &Model[objectSelected]->scaleZ, 0.1f, 0.0f, +FLT_MAX);
-				}
-
-				if (ImGui::CollapsingHeader("Rotation"))
-				{
-					ImGui::DragFloat("Pitch", &Model[objectSelected]->pitch, 0.5f, -FLT_MAX, +FLT_MAX);
-					ImGui::DragFloat("Yaw", &Model[objectSelected]->yaw, 0.5f, -FLT_MAX, +FLT_MAX);
-					ImGui::DragFloat("Roll", &Model[objectSelected]->roll, 0.5f, -FLT_MAX, +FLT_MAX);
-
-					glm::mat4 rotationMatrix(1.0f);
-
-					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->pitch), glm::vec3(1.0f, 0.0f, 0.0f));
-					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->yaw), glm::vec3(0.0f, 1.0f, 0.0f));
-					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->roll), glm::vec3(0.0f, 0.0f, 1.0f));
-					
-					Model[objectSelected]->objRotation = rotationMatrix;
-				}
-			}
-			ImGui::EndTabItem();
-		}
-		if (ImGui::BeginTabItem("Texture"))
-		{
-			ImGui::EndTabItem();
-		}
-		ImGui::EndTabBar();
+		TransformationPanel();
 	}
-	ImGui::End();
 }
 
 void PropertyPanel::ObjectSelection()
 {
-	ImGui::Begin("Objects");
+	ImGui::Begin("Objects", &active);
 	if (ImGui::Button("Add Object"))
 	{
 		wchar_t szFile[260];
@@ -110,8 +64,65 @@ void PropertyPanel::ObjectSelection()
 			selected = n;
 			std::cout << "Selected Object: " << selected << std::endl;
 			objectSelected = n;
+			camera.objectSelected = objectSelected;
+			camera.focusOnObject = true;
+			objectIsSelected = true;
 		}
 	}
 
+	ImGui::End();
+}
+
+void PropertyPanel::TransformationPanel()
+{
+	ImGui::Begin("Mesh properties", &objectIsSelected);// Create a window called "Hello, world!" and append into it.
+	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
+	{
+		if (ImGui::BeginTabItem("Transform"))
+		{
+			if (Model.size() > 0)
+			{
+				if (ImGui::CollapsingHeader("Position"))
+				{
+					ImGui::DragFloat("X", &Model[objectSelected]->positionX, 0.1f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Y", &Model[objectSelected]->positionY, 0.1f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Z", &Model[objectSelected]->positionZ, 0.1f, -FLT_MAX, +FLT_MAX);
+					glm::mat4 translationMatrix = glm::mat4(1.0f); // Initialize as identity matrix
+					translationMatrix = glm::translate(translationMatrix, glm::vec3(Model[objectSelected]->positionX, Model[objectSelected]->positionY, Model[objectSelected]->positionZ));
+					Model[objectSelected]->objTranslation = translationMatrix;
+				}
+
+				if (ImGui::CollapsingHeader("Scale"))
+				{
+					ImGui::DragFloat("scaleObject", &Model[objectSelected]->scaleObject, 0.1f, 0.0f, +FLT_MAX);
+
+					ImGui::DragFloat("Scale X", &Model[objectSelected]->scaleX, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Scale Y", &Model[objectSelected]->scaleY, 0.1f, 0.0f, +FLT_MAX);
+					ImGui::DragFloat("Scale Z", &Model[objectSelected]->scaleZ, 0.1f, 0.0f, +FLT_MAX);
+				}
+
+				if (ImGui::CollapsingHeader("Rotation"))
+				{
+					ImGui::DragFloat("Pitch", &Model[objectSelected]->pitch, 0.5f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Yaw", &Model[objectSelected]->yaw, 0.5f, -FLT_MAX, +FLT_MAX);
+					ImGui::DragFloat("Roll", &Model[objectSelected]->roll, 0.5f, -FLT_MAX, +FLT_MAX);
+
+					glm::mat4 rotationMatrix(1.0f);
+
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+					rotationMatrix = glm::rotate(rotationMatrix, glm::radians(Model[objectSelected]->roll), glm::vec3(0.0f, 0.0f, 1.0f));
+
+					Model[objectSelected]->objRotation = rotationMatrix;
+				}
+			}
+			ImGui::EndTabItem();
+		}
+		if (ImGui::BeginTabItem("Texture"))
+		{
+			ImGui::EndTabItem();
+		}
+		ImGui::EndTabBar();
+	}
 	ImGui::End();
 }

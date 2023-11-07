@@ -6,13 +6,17 @@
 class PropertyPanel : public Panel
 {
 public:
-	PropertyPanel(std::vector<GameObject*>& model);
+	PropertyPanel(std::vector<GameObject*>& model, Camera& camera);
 	virtual ~PropertyPanel();
 
 	void Render() override;
 	void ObjectSelection();
+	void TransformationPanel();
 
 	int objectSelected = 0;
+	bool objectIsSelected = false;
+
+	Camera& camera;
 private:
 	std::vector<GameObject*>& Model;
 

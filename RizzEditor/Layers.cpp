@@ -48,7 +48,7 @@ Layers::Layers(GLFWwindow* _window, RizzEngine& _engine, Camera& _camera, FBO* _
 
 void Layers::CreatePanels()
 {
-    PropertyPanel panel1(model);
+    PropertyPanel panel1(model, camera);
     Layers::m_PropertyPanel = std::make_unique<PropertyPanel>(panel1);
     Layers::panels.push_back(m_PropertyPanel.get());
 }
@@ -82,7 +82,7 @@ void Layers::BeginLayer()
 void Layers::Render()
 {
     //ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-
+    camera.updateCam();
     AppMainMenuBar();
 	ImGui::ShowDemoWindow();
     ImGui::Begin("Viewport");
@@ -91,9 +91,10 @@ void Layers::Render()
         ImGui::BeginChild("GameRender");
         float width = ImGui::GetContentRegionAvail().x;
         float height = ImGui::GetContentRegionAvail().y;
+
         if (ImGui::IsMouseHoveringRect(ImGui::GetWindowPos(),ImVec2(ImGui::GetWindowWidth(), ImGui::GetWindowHeight())))
         {
-            camera.Imputs(window);
+            camera.Inputs(window);
         }
         ImGui::Image((ImTextureID)fbo->getFrameTexture(), ImGui::GetContentRegionAvail(),ImVec2(0, 1),ImVec2(1, 0));
     }
@@ -148,6 +149,14 @@ void Layers::AppMainMenuBar()
             }
             ImGui::EndMenu();
            
+        }
+        if (ImGui::BeginMenu("View"))
+        {
+            if (ImGui::MenuItem("Property Panel")) 
+            {
+                m_PropertyPanel.get()->active = true;
+            }
+            ImGui::EndMenu();
         }
         ImGui::EndMainMenuBar();
     }

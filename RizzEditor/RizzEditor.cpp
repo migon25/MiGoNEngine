@@ -24,6 +24,21 @@ std::string GetHardwareInfo() {
 
 std::vector<GameObject*> GameObjects;
 std::vector<Model*> objectModels;
+Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, CAMERA_INIT_POS, GameObjects);
+
+void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset) {
+	// Define zoom speed
+	float zoomSpeed = 0.1f;
+
+	// Zoom in
+	if (yoffset > 0) {
+		camera.ZoomIn(zoomSpeed);
+	}
+	// Zoom out
+	else if (yoffset < 0) {
+		camera.ZoomOut(zoomSpeed);
+	}
+}
 
 int main() {
 
@@ -35,10 +50,10 @@ int main() {
 	// from x = 0, y = 0, to x = WINDW_WIDTH, y = WINDOW_HEIGHT
 	FBO fbo(WINDOW_WIDTH, WINDOW_HEIGHT);
 	//glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetScrollCallback(window, ScrollCallback);
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
 	glEnable(GL_DEPTH_TEST);
 
-	Camera camera(WINDOW_WIDTH, WINDOW_HEIGHT, CAMERA_INIT_POS, GameObjects);
 	Shader shaderProgram("default.vert", "default.frag");
 	RizzEngine engine(GameObjects, objectModels);
 
@@ -67,15 +82,12 @@ int main() {
 	{
 		double currentTime = glfwGetTime();
 		double deltaTime = currentTime - lastTime;
-		if ((glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS))
-		{
-			processInput(window); //process if the user has pressed ESCAPE button
-		}
+
 		layer.BeginLayer();
 		fbo.Bind();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); //Clean back buffer & assign new color to it
 
-		camera.updateMatrix(45.0f, 0.1f, 1000.0f);
+		camera.updateMatrix(45.0f);
 
 		static std::vector<float> fpsHistory;
 		const int maxHistorySize = 100;  // Adjust as needed
